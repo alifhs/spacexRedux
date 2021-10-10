@@ -3,7 +3,7 @@ import React from "react";
 export const Card = ({ flight }) => {
   // const tags = image.tags.split(",");
   return (
-    <div className="max-w-sm  rounded overflow-hidden shadow-lg">
+    <div className="max-w-sm  rounded overflow-hidden shadow-lg bg-white">
       <img src={flight.image} alt="missing rocket " className="w-full h-40 object-scale-down " />
       {/* {flight_number: item.flight_number , mission_name: item.mission_name, rocket_name : item.rocket.rocket_name, launch_year: item.launch_year} */}
       <div className="px-6 py-6">
@@ -27,10 +27,22 @@ export const Card = ({ flight }) => {
             <strong>Payload: </strong>
             {flight.payload}
           </li>
-          <li>
+
+          {
+            flight.upcoming ? (
+              <li>
             <strong>Launch Status: </strong>
-            {flight.launch_success ? "Success" : "Failure"}
+            {'Upcoming'}
           </li>
+            ) :
+          ( <li>
+            <strong>Launch Status: </strong>
+            {flight.launch_success ? "Successful" : "Failed"}
+          </li> )
+
+          }
+          
+
           <li>
             <strong>Details: </strong>
             <a className="text-blue-400" href={flight.details}>Click here for more details</a>

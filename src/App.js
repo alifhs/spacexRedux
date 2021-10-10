@@ -4,6 +4,7 @@ import { Search } from "./components/search";
 import "./index.css";
 import { useSelector, useDispatch } from "react-redux";
 import { changeFilter } from "./store/reducers/LaunchDataReducer";
+import moment from "moment";
 
 function App() {
   // const [data, setData] = useState([]);
@@ -15,15 +16,18 @@ function App() {
   const filterName = useSelector((state) => state.launchData.filterName);
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
+  const [upcoming, setUpcoming] = useState(false);
 
   console.log(filterName);
 
   const onChange = (e) => {
     switch (e.target.value) {
-      case "success":
+      case "last-week":
         // logout({ returnTo: window.location.origin });
         break;
-      case "failure":
+      case "last-month":
+        break;
+      case "last-year":
         break;
       default:
 
@@ -31,15 +35,40 @@ function App() {
     }
   };
 
+  //upcoming 
+
+  const onUpcomingChange = (e) => {
+      setFailure(false);
+      setSuccess(false);
+      if(!upcoming) {
+        dispatch(
+          changeFilter({
+            filterName: "upcoming launch",
+            payload: `/upcoming`,
+          })
+        );
+        setUpcoming(!upcoming)
+      } else {
+        dispatch(
+          changeFilter({
+            filterName: "",
+            payload: ``,
+          })
+        );
+        setUpcoming(false);
+      }
+  }
+
   //success failure
   const onSuccessChange = (e) => {
+    setUpcoming(false);
     if (failure) {
       setFailure(!failure);
       setSuccess(!success);
       dispatch(
         changeFilter({
           filterName: "successful launch",
-          payload: `launch_success=${!success}`,
+          payload: `?launch_success=${!success}`,
         })
       );
     } else if (success) {
@@ -56,19 +85,20 @@ function App() {
       dispatch(
         changeFilter({
           filterName: "successful launch",
-          payload: `launch_success=${!success}`,
+          payload: `?launch_success=${!success}`,
         })
       );
     }
   };
   const onFailureChange = (e) => {
+    setUpcoming(false);
     if (success) {
       setSuccess(!success);
       setFailure(!failure);
       dispatch(
         changeFilter({
           filterName: "failed launch",
-          payload: `launch_success=false`,
+          payload: `?launch_success=false`,
         })
       );
     } else if (failure) {
@@ -84,7 +114,7 @@ function App() {
       dispatch(
         changeFilter({
           filterName: "failed launch",
-          payload: `launch_success=false`,
+          payload: `?launch_success=false`,
         })
       );
     }
@@ -100,10 +130,10 @@ function App() {
     );
   }, []);
   return (
-    <div className="mx-auto pt-10 border-green-100  ">
+    <div className="mx-auto pt-10 bg-gray-100  ">
       <Search setName={setName} />
 
-      <div className="flex ml-14 mt-10 space-x-12 ">
+      <div className="flex items-center justify-center mt-10 space-x-12 ">
         {" "}
         {
           <h4 className=" text-blue-400 ">
@@ -113,7 +143,7 @@ function App() {
               : `filtered by ${filterName}`}{" "}
           </h4>
         }{" "}
-        <div className="flex items-center">
+        <div className="flex   items-center">
           {" "}
           <input
             checked={success}
@@ -122,12 +152,13 @@ function App() {
             id="success"
             name="success"
             value="success"
+            className = "relative "
           />
-          <label className="relative bottom-1 left-1" for="checkbox">
-            success
+          <label className="relative  left-1" for="checkbox">
+            successful
           </label>
         </div>
-        <div className="flex items-center">
+        <div className="flex   items-center">
           {" "}
           <input
             checked={failure}
@@ -136,11 +167,45 @@ function App() {
             id="failure"
             name="failure"
             value="failure"
+            className = "relative "
           />
-          <label className="relative bottom-1 left-1" for="checkbox">
-            failure
+          <label className="relative  left-1" for="checkbox">
+            failed
           </label>
         </div>
+        <div className="flex relative  items-center">
+          {" "}
+          <input
+            checked={upcoming}
+            onChange={onUpcomingChange}
+            type="checkbox"
+            id="upcoming"
+            name="upcoming"
+            value="upcoming"
+            className = "relative "
+          />
+          <label className="relative left-1" for="checkbox">
+            upcoming
+          </label>
+        </div>
+
+        <div className=''>
+        <label for="cars">Filter By Date:</label>
+        <select
+          name="launch_status"
+          onChange={onChange}
+          className="bg-white  outline-none"
+        >
+          <option value="empty">Select</option>
+          <option value="last-week">Last Week</option>
+
+          <option value="last-month">Last Month</option>
+          <option value="last-year">Last Year</option>
+
+          
+        </select>
+        </div> 
+
       </div>
       {isLoading ? (
         <h1 className="text-6xl text-center mx-auto mt-32">Loading....</h1>

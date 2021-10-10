@@ -26,7 +26,7 @@ export function changeFilter({filterName, payload})  {
     });
     fetch(
       
-      `https://api.spacexdata.com/v3/launches?${payload}`
+      `https://api.spacexdata.com/v3/launches${payload}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -39,7 +39,8 @@ export function changeFilter({filterName, payload})  {
             image: item.links.mission_patch_small,
             payload: item.rocket.second_stage.payloads[0].payload_type,
             launch_success : item.launch_success,
-            details: item.links.article_link
+            details: item.links.article_link,
+            upcoming: item.upcoming
           };
         });
         dispatch({
