@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {changeFilter} from '../store/reducers/LaunchDataReducer';
 import { useDispatch } from "react-redux";
 
-export const Search = ({setName}) => {
+export const Search = ({filters}) => {
 
     const [text, setText] = useState('');
 
@@ -17,6 +17,9 @@ export const Search = ({setName}) => {
           payload : `?rocket_name=${text}`
         }))
         setText('');
+        filters.setFailure(false);
+        filters.setSuccess(false);
+        filters.setUpcoming(false);
     }
 
   return (
@@ -25,7 +28,7 @@ export const Search = ({setName}) => {
         <div className="flex items-center border-2  rounded-md  border-teal-500  ">
           <input
             onChange={(e) => setText(e.target.value)}
-            className=" border-2  bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none shadow-inner"
+            className=" border-2  bg-white border-none w-full text-gray-700 mr-3 py-1 px-2  focus:outline-none shadow-inner"
             type="text"
             placeholder="Search Rocket By Name..."
             value={text}

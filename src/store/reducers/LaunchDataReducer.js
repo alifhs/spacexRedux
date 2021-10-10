@@ -1,13 +1,14 @@
 const initialState = {
   filterName: "",
   data: [],
+  isLoading : true
 };
 
 export function launchDataReducer(state = initialState, action) {
   if (action.type === "filterChanged")
-    return { ...state, filterName: action.payload };
+    return { ...state, filterName: action.payload, isLoading: true };
   else if (action.type === "launchDataChanged")
-    return { ...state, data: action.payload };
+    return { ...state, data: action.payload , isLoading: false};
   return state;
 }
 
@@ -22,7 +23,8 @@ export function changeFilter({filterName, payload})  {
   return function changeFilterThunk(dispatch) {
     dispatch( {
       type: 'filterChanged',
-      payload: filterName
+      payload: filterName,
+      
     });
     fetch(
       
